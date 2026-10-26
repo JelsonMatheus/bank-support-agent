@@ -37,3 +37,10 @@ def test_action_and_reason_are_consistent(intent_map):
         else:
             pytest.fail(f"{intent}: unknown action {labels['action']!r}")
 
+
+LABEL_FIELDS = {"category", "action", "handoff_reason", "articles"}
+
+
+def test_every_intent_has_all_label_fields(intent_map):
+    for intent, labels in intent_map["intents"].items():
+        assert set(labels) == LABEL_FIELDS, f"{intent}: fields {sorted(labels)}"
