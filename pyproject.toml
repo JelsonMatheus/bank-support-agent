@@ -1,0 +1,7 @@
+[project]
+name = "bank-support-agent"
+version = "0.1.0"
+description = "LLM-powered support agent for a digital bank: ticket triage, grounded answers and safe hand-off"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = []
