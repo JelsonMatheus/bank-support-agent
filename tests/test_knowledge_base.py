@@ -63,3 +63,14 @@ def test_no_refund_promises(articles):
     for article in articles:
         match = REFUND_PROMISES.search(article.body)
         assert match is None, f"{article.id} contains {match.group()!r}"
+
+
+def test_intent_map_points_to_existing_articles(articles, intent_map):
+    known_ids = {article.id for article in articles}
+    for intent, labels in intent_map["intents"].items():
+        if labels["action"] == "answer":
+            assert labels["articles"], f"{intent}: answer without articles"
+            unknown = set(labels["articles"]) - known_ids
+            assert not unknown, f"{intent}: unknown articles {sorted(unknown)}"
+        else:
+            assert labels["articles"] == [], f"{intent}: handoff with articles"
