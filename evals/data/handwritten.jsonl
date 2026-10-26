@@ -1,0 +1,12 @@
+{"split": "dev", "text": "Can I speak to an actual human? The app isn't helping.", "expected_category": "other", "expected_action": "handoff", "expected_handoff_reason": "human_requested", "expected_articles": []}
+{"split": "dev", "text": "My card still hasn't arrived and I'd like to talk to a real person about it, not a bot.", "expected_category": "cards", "expected_action": "handoff", "expected_handoff_reason": "human_requested", "expected_articles": []}
+{"split": "dev", "text": "Please get me a human agent, I've been waiting for my top-up for 3 days", "expected_category": "top_up", "expected_action": "handoff", "expected_handoff_reason": "human_requested", "expected_articles": []}
+{"split": "dev", "text": "What's the weather going to be like in Lisbon tomorrow?", "expected_category": "other", "expected_action": "handoff", "expected_handoff_reason": "out_of_scope", "expected_articles": []}
+{"split": "dev", "text": "Can you recommend a good laptop for under 800 euros?", "expected_category": "other", "expected_action": "handoff", "expected_handoff_reason": "out_of_scope", "expected_articles": []}
+{"split": "dev", "text": "write me a short poem about money", "expected_category": "other", "expected_action": "handoff", "expected_handoff_reason": "out_of_scope", "expected_articles": []}
+{"split": "test", "text": "Is there a number I can call to talk to a person?", "expected_category": "other", "expected_action": "handoff", "expected_handoff_reason": "human_requested", "expected_articles": []}
+{"split": "test", "text": "I need a human, not an assistant. My transfer is missing.", "expected_category": "transfers", "expected_action": "handoff", "expected_handoff_reason": "human_requested", "expected_articles": []}
+{"split": "test", "text": "transfer me to a real agent pls", "expected_category": "other", "expected_action": "handoff", "expected_handoff_reason": "human_requested", "expected_articles": []}
+{"split": "test", "text": "Who won the football match last night?", "expected_category": "other", "expected_action": "handoff", "expected_handoff_reason": "out_of_scope", "expected_articles": []}
+{"split": "test", "text": "How do I cook rice in a pressure cooker?", "expected_category": "other", "expected_action": "handoff", "expected_handoff_reason": "out_of_scope", "expected_articles": []}
+{"split": "test", "text": "Can you help me with my maths homework?", "expected_category": "other", "expected_action": "handoff", "expected_handoff_reason": "out_of_scope", "expected_articles": []}
