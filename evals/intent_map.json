@@ -9,36 +9,36 @@
     "kb_not_covered"
   ],
   "intents": {
-    "activate_my_card": {"category": "cards", "action": "answer", "handoff_reason": null},
-    "card_arrival": {"category": "cards", "action": "answer", "handoff_reason": null},
-    "card_delivery_estimate": {"category": "cards", "action": "answer", "handoff_reason": null},
-    "card_not_working": {"category": "cards", "action": "answer", "handoff_reason": null},
-    "pin_blocked": {"category": "cards", "action": "answer", "handoff_reason": null},
+    "activate_my_card": {"category": "cards", "action": "answer", "handoff_reason": null, "articles": ["kb-001"]},
+    "card_arrival": {"category": "cards", "action": "answer", "handoff_reason": null, "articles": ["kb-002"]},
+    "card_delivery_estimate": {"category": "cards", "action": "answer", "handoff_reason": null, "articles": ["kb-002"]},
+    "card_not_working": {"category": "cards", "action": "answer", "handoff_reason": null, "articles": ["kb-003", "kb-005"]},
+    "pin_blocked": {"category": "cards", "action": "answer", "handoff_reason": null, "articles": ["kb-004"]},
 
-    "declined_card_payment": {"category": "payments", "action": "answer", "handoff_reason": null},
-    "pending_card_payment": {"category": "payments", "action": "answer", "handoff_reason": null},
-    "card_payment_fee_charged": {"category": "payments", "action": "answer", "handoff_reason": null},
-    "transaction_charged_twice": {"category": "payments", "action": "handoff", "handoff_reason": "refund_or_dispute"},
-    "request_refund": {"category": "payments", "action": "handoff", "handoff_reason": "refund_or_dispute"},
+    "declined_card_payment": {"category": "payments", "action": "answer", "handoff_reason": null, "articles": ["kb-006", "kb-009"]},
+    "pending_card_payment": {"category": "payments", "action": "answer", "handoff_reason": null, "articles": ["kb-007"]},
+    "card_payment_fee_charged": {"category": "payments", "action": "answer", "handoff_reason": null, "articles": ["kb-008"]},
+    "transaction_charged_twice": {"category": "payments", "action": "handoff", "handoff_reason": "refund_or_dispute", "articles": []},
+    "request_refund": {"category": "payments", "action": "handoff", "handoff_reason": "refund_or_dispute", "articles": []},
 
-    "top_up_failed": {"category": "top_up", "action": "answer", "handoff_reason": null},
-    "pending_top_up": {"category": "top_up", "action": "answer", "handoff_reason": null},
+    "top_up_failed": {"category": "top_up", "action": "answer", "handoff_reason": null, "articles": ["kb-011"]},
+    "pending_top_up": {"category": "top_up", "action": "answer", "handoff_reason": null, "articles": ["kb-012"]},
 
-    "transfer_timing": {"category": "transfers", "action": "answer", "handoff_reason": null},
-    "failed_transfer": {"category": "transfers", "action": "answer", "handoff_reason": null},
+    "transfer_timing": {"category": "transfers", "action": "answer", "handoff_reason": null, "articles": ["kb-013"]},
+    "failed_transfer": {"category": "transfers", "action": "answer", "handoff_reason": null, "articles": ["kb-014"]},
 
-    "passcode_forgotten": {"category": "account", "action": "answer", "handoff_reason": null},
-    "edit_personal_details": {"category": "account", "action": "answer", "handoff_reason": null},
-    "terminate_account": {"category": "account", "action": "handoff", "handoff_reason": "account_closure"},
+    "passcode_forgotten": {"category": "account", "action": "answer", "handoff_reason": null, "articles": ["kb-015"]},
+    "edit_personal_details": {"category": "account", "action": "answer", "handoff_reason": null, "articles": ["kb-016"]},
+    "terminate_account": {"category": "account", "action": "handoff", "handoff_reason": "account_closure", "articles": []},
 
-    "card_payment_not_recognised": {"category": "security", "action": "handoff", "handoff_reason": "fraud_or_security"},
-    "compromised_card": {"category": "security", "action": "handoff", "handoff_reason": "fraud_or_security"},
-    "lost_or_stolen_card": {"category": "security", "action": "handoff", "handoff_reason": "fraud_or_security"},
+    "card_payment_not_recognised": {"category": "security", "action": "handoff", "handoff_reason": "fraud_or_security", "articles": []},
+    "compromised_card": {"category": "security", "action": "handoff", "handoff_reason": "fraud_or_security", "articles": []},
+    "lost_or_stolen_card": {"category": "security", "action": "handoff", "handoff_reason": "fraud_or_security", "articles": []},
 
-    "exchange_rate": {"category": "payments", "action": "handoff", "handoff_reason": "kb_not_covered"},
-    "atm_support": {"category": "cards", "action": "handoff", "handoff_reason": "kb_not_covered"},
-    "country_support": {"category": "account", "action": "handoff", "handoff_reason": "kb_not_covered"},
-    "age_limit": {"category": "account", "action": "handoff", "handoff_reason": "kb_not_covered"},
-    "getting_virtual_card": {"category": "cards", "action": "handoff", "handoff_reason": "kb_not_covered"}
+    "exchange_rate": {"category": "payments", "action": "handoff", "handoff_reason": "kb_not_covered", "articles": []},
+    "atm_support": {"category": "cards", "action": "handoff", "handoff_reason": "kb_not_covered", "articles": []},
+    "country_support": {"category": "account", "action": "handoff", "handoff_reason": "kb_not_covered", "articles": []},
+    "age_limit": {"category": "account", "action": "handoff", "handoff_reason": "kb_not_covered", "articles": []},
+    "getting_virtual_card": {"category": "cards", "action": "handoff", "handoff_reason": "kb_not_covered", "articles": []}
   }
 }
