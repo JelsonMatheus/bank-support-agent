@@ -5,9 +5,11 @@ description = "LLM-powered support agent for a digital bank: ticket triage, grou
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
+    "celery>=5.6.3",
     "django>=6.1.2",
     "django-environ>=0.14.0",
     "djangorestframework>=3.18.3",
     "pgvector>=0.5.1",
     "psycopg[binary]>=3.3.6",
+    "redis>=8.1.0",
 ]
