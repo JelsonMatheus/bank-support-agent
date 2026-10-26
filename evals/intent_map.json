@@ -1,0 +1,44 @@
+{
+  "categories": ["cards", "payments", "top_up", "transfers", "account", "security", "other"],
+  "handoff_reasons": [
+    "refund_or_dispute",
+    "fraud_or_security",
+    "account_closure",
+    "human_requested",
+    "out_of_scope",
+    "kb_not_covered"
+  ],
+  "intents": {
+    "activate_my_card": {"category": "cards", "action": "answer", "handoff_reason": null},
+    "card_arrival": {"category": "cards", "action": "answer", "handoff_reason": null},
+    "card_delivery_estimate": {"category": "cards", "action": "answer", "handoff_reason": null},
+    "card_not_working": {"category": "cards", "action": "answer", "handoff_reason": null},
+    "pin_blocked": {"category": "cards", "action": "answer", "handoff_reason": null},
+
+    "declined_card_payment": {"category": "payments", "action": "answer", "handoff_reason": null},
+    "pending_card_payment": {"category": "payments", "action": "answer", "handoff_reason": null},
+    "card_payment_fee_charged": {"category": "payments", "action": "answer", "handoff_reason": null},
+    "transaction_charged_twice": {"category": "payments", "action": "handoff", "handoff_reason": "refund_or_dispute"},
+    "request_refund": {"category": "payments", "action": "handoff", "handoff_reason": "refund_or_dispute"},
+
+    "top_up_failed": {"category": "top_up", "action": "answer", "handoff_reason": null},
+    "pending_top_up": {"category": "top_up", "action": "answer", "handoff_reason": null},
+
+    "transfer_timing": {"category": "transfers", "action": "answer", "handoff_reason": null},
+    "failed_transfer": {"category": "transfers", "action": "answer", "handoff_reason": null},
+
+    "passcode_forgotten": {"category": "account", "action": "answer", "handoff_reason": null},
+    "edit_personal_details": {"category": "account", "action": "answer", "handoff_reason": null},
+    "terminate_account": {"category": "account", "action": "handoff", "handoff_reason": "account_closure"},
+
+    "card_payment_not_recognised": {"category": "security", "action": "handoff", "handoff_reason": "fraud_or_security"},
+    "compromised_card": {"category": "security", "action": "handoff", "handoff_reason": "fraud_or_security"},
+    "lost_or_stolen_card": {"category": "security", "action": "handoff", "handoff_reason": "fraud_or_security"},
+
+    "exchange_rate": {"category": "payments", "action": "handoff", "handoff_reason": "kb_not_covered"},
+    "atm_support": {"category": "cards", "action": "handoff", "handoff_reason": "kb_not_covered"},
+    "country_support": {"category": "account", "action": "handoff", "handoff_reason": "kb_not_covered"},
+    "age_limit": {"category": "account", "action": "handoff", "handoff_reason": "kb_not_covered"},
+    "getting_virtual_card": {"category": "cards", "action": "handoff", "handoff_reason": "kb_not_covered"}
+  }
+}
