@@ -7,13 +7,13 @@ from django.conf import settings
 from django.db import transaction
 from django.utils import timezone
 
-from agent.baseline import BaselineAgent
 from agent.types import Agent
+from agent.registry import get_agent
 from tickets.models import AgentRun, Ticket
+
 
 logger = logging.getLogger(__name__)
 
-AGENTS = {"baseline": BaselineAgent}
 
 FINAL_STATUS = {
     "answered": Ticket.Status.ANSWERED,
@@ -21,10 +21,6 @@ FINAL_STATUS = {
 }
 
 MAX_ERROR_LENGTH = 2000
-
-
-def get_agent() -> Agent:
-    return AGENTS[settings.AGENT_BACKEND]()
 
 
 def enqueue_ticket(ticket_id: UUID) -> None:
