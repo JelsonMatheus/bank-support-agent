@@ -8,6 +8,11 @@ from agent.types import AgentResult
 from tickets.models import AgentRun, Ticket
 from tickets.services import process_ticket
 
+from datetime import timedelta
+
+from django.core.management import call_command
+from django.utils import timezone
+
 pytestmark = pytest.mark.django_db
 
 
@@ -91,3 +96,18 @@ def test_creating_a_ticket_enqueues_it_after_commit(client, monkeypatch, django_
         )
 
     assert enqueued == [uuid.UUID(response.json()["id"])]
+
+def test_requeue_stale_tickets(monkeypatch):
+    stuck = Ticket.objects.create(customer_id="c-0001", text="a", status=Ticket.Status.PROCESSING)
+    waiting = Ticket.objects.create(customer_id="c-0002", text="b")
+    recent = Ticket.objects.create(customer_id="c-0003", text="c")
+    Ticket.objects.filter(id__in=[stuck.id, waiting.id]).update(updated_at=timezone.now() - timedelta(minutes=30))
+
+    enqueued = []
+    monkeypatch.setattr("tickets.management.commands.requeue_stale_tickets.enqueue_ticket", enqueued.append)
+
+    call_command("requeue_stale_tickets", "--minutes", "10")
+
+    assert set(enqueued) == {stuck.id, waiting.id}
+    stuck.refresh_from_db()
+    assert stuck.status == Ticket.Status.RECEIVED
