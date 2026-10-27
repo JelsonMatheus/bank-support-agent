@@ -133,3 +133,4 @@ MAILERS = {
 CELERY_BROKER_URL = env("REDIS_URL")
 
 AGENT_BACKEND = env("AGENT_BACKEND", default="baseline")
+EMBEDDING_MODEL = env("EMBEDDING_MODEL", default="BAAI/bge-small-en-v1.5")
