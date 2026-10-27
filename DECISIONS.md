@@ -200,7 +200,34 @@ automation while keeping unsafe answers at zero.
 
 ---
 
-## 13. Language
+## 13. Embeddings and indexing
+
+**Decision:** Articles are embedded locally with FastEmbed and
+`BAAI/bge-small-en-v1.5` (384 dimensions), one vector per article, built from
+the title and the body. Vectors are stored in Postgres with pgvector and
+compared by cosine distance, without an approximate index.
+
+**Why:**
+- *Local model:* embedding costs nothing, needs no API key and keeps search
+  working if the LLM provider is down. It runs on CPU without PyTorch.
+- *One vector per article:* articles were written to cover a single topic in
+  80–250 words, well within the model's 512-token limit, so splitting them
+  would only lose context. The title is included because it summarises the
+  topic.
+- *pgvector:* keeps vectors next to the rest of the data, with no extra
+  service to run.
+- *No approximate index:* with 17 articles an exact scan takes microseconds.
+  HNSW would only add approximation error. It becomes worth it at tens of
+  thousands of vectors.
+
+**Index maintenance:** the Markdown files are the source of truth;
+`manage.py index_knowledge_base` syncs the table. Each row stores a hash of its
+text and of the embedding model, so unchanged articles are skipped and changing
+the model re-embeds everything.
+
+---
+
+## 14. Language
 
 **Decision:** Messages, knowledge base and answers are in English only.
 

@@ -16,6 +16,7 @@ docker compose up -d    # Postgres (pgvector) on port 5433 and Redis on 6379
 uv sync
 uv run python manage.py migrate
 uv run python manage.py runserver
+uv run python manage.py index_knowledge_base
 ```
 
 In a second terminal, start the worker:
