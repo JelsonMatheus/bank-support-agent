@@ -1,4 +1,18 @@
 from evals.metrics import compute_metrics, percentile
+from agent.baseline import BaselineAgent
+from evals.run_eval import evaluate
+
+
+class FailingAgent:
+    def run(self, text, customer_id):
+        raise RuntimeError("provider timeout")
+
+
+CASES = [
+    {"id": f"dev-000{i}", "text": f"message {i}", "intent": "card_arrival", "expected_category": "cards",
+     "expected_action": "answer", "expected_handoff_reason": None, "expected_articles": ["kb-002"]}
+    for i in range(1, 4)
+]
 
 
 def record(expected_action, outcome, **overrides) -> dict:
@@ -72,4 +86,17 @@ def test_hand_offs_are_broken_down_by_expected_reason():
 def test_percentile_uses_nearest_rank():
     assert percentile([10, 20, 30, 40], 50) == 20
     assert percentile([10, 20, 30, 40], 95) == 40
-    
+
+def test_evaluate_keeps_case_order_and_labels():
+    records = evaluate(CASES, BaselineAgent(), workers=2)
+
+    assert [r["id"] for r in records] == ["dev-0001", "dev-0002", "dev-0003"]
+    assert all(r["outcome"] == "handed_off" and r["expected_action"] == "answer" for r in records)
+
+
+def test_evaluate_records_agent_errors_instead_of_stopping():
+    records = evaluate(CASES, FailingAgent(), workers=2)
+
+    assert all(r["outcome"] == "failed" for r in records)
+    assert "provider timeout" in records[0]["error"]
+
