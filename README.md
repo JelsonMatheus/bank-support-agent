@@ -26,6 +26,13 @@ uv run celery -A config worker -l info
 
 Check that everything is up at http://localhost:8000/health/.
 
+If the worker or Redis was down, re-queue tickets stuck for more than
+10 minutes with:
+
+```bash
+uv run python manage.py requeue_stale_tickets
+```
+
 ## Running tests
 
 ```bash
