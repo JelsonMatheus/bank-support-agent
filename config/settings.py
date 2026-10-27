@@ -131,3 +131,5 @@ MAILERS = {
 }
 
 CELERY_BROKER_URL = env("REDIS_URL")
+
+AGENT_BACKEND = env("AGENT_BACKEND", default="baseline")
