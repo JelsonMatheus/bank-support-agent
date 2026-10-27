@@ -227,7 +227,48 @@ the model re-embeds everything.
 
 ---
 
-## 14. Language
+## 14. Retrieval
+
+**Decision:** Retrieval is evaluated on its own, without an LLM, with hit@k,
+MRR and the distribution of top-1 similarity scores
+(`evals/run_retrieval_eval.py`). The number of articles given to the agent
+(k = 3 or 5) will be chosen by comparing both in the end-to-end evaluation.
+
+**Results on the development set** (`BAAI/bge-small-en-v1.5`, 84 answerable
+cases):
+
+| Hit@1 | Hit@3 | Hit@5 | MRR |
+| --- | --- | --- | --- |
+| 76.2% | 94.0% | 100.0% | 0.864 |
+
+Hit@k is the ceiling for answer accuracy: the agent can't answer correctly from
+an article it never receives. With k = 3 the ceiling is 94%; with k = 5, 100%.
+Going from the top 1 to the top 3 recovers 15 cases where the right article
+ranked second or third.
+
+**Top-1 similarity:**
+
+| Group | p10 | p50 | p90 |
+| --- | --- | --- | --- |
+| Answerable | 0.682 | 0.760 | 0.807 |
+| `kb_not_covered` | 0.554 | 0.659 | 0.685 |
+| `out_of_scope` | 0.460 | 0.490 | 0.572 |
+
+**What this means for hand-off:** the medians are well apart, but the tails
+overlap: the answerable p10 (0.682) is level with the `kb_not_covered` p90
+(0.685), so any threshold in that region errs one way or the other. A
+similarity threshold of <value> is used only as a first barrier: it blocks no
+answerable case in the development set and catches <n>/30 `kb_not_covered` and
+<n>/3 `out_of_scope` cases. Everything above it relies on the LLM judging
+whether the retrieved articles actually answer the question.
+
+**Caveats:** the threshold is specific to this embedding model and was chosen
+on the development set; the test set will show whether it holds. Only 3
+`out_of_scope` cases exist, too few to characterise that group.
+
+---
+
+## 15. Language
 
 **Decision:** Messages, knowledge base and answers are in English only.
 
