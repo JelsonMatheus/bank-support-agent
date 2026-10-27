@@ -151,8 +151,32 @@ sit behind the bank's API gateway, which would handle both.
 
 ---
 
-## 11. Language
+## 11. Processing tickets
+
+**Decision:** Tickets are queued only after they are committed, and processed
+by a Celery task that claims a ticket by moving it from `received` to
+`processing` in a single conditional update. Every agent execution is stored as
+an `AgentRun`. Any error, including a result that violates the database
+constraints, is stored as a `failed` run and the ticket is marked `failed`.
+
+**Why:** A queue may deliver the same message twice; the conditional update
+makes processing idempotent, so a ticket is never answered twice. Recording
+every failure means no ticket is left in `processing` because of an error.
+
+**Stuck tickets:** a ticket that couldn't be queued, or whose worker died,
+is re-queued by `manage.py requeue_stale_tickets`. In production this would
+run every few minutes with Celery Beat or cron; here it is run manually.
+
+**Baseline agent:** until the LLM agent exists, a baseline agent hands every
+ticket off with `low_confidence`. It is the safest possible behaviour and the
+reference point for evaluation: the real agent must answer more without
+handing off fewer of the cases that require a human.
+
+---
+
+## 12. Language
 
 **Decision:** Messages, knowledge base and answers are in English only.
 
 **Why:** BANKING77 is in English, and one language keeps the scope realistic.
+
