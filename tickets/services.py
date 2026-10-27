@@ -48,7 +48,7 @@ def process_ticket(ticket_id: UUID | str, agent: Agent | None = None) -> AgentRu
         return None
 
     ticket = Ticket.objects.get(id=ticket_id)
-    agent = agent or get_agent()
+    agent = agent or get_agent(settings.AGENT_BACKEND)
     started = time.perf_counter()
 
     try:
