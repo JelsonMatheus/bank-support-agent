@@ -94,3 +94,57 @@ def format_report(m: dict) -> str:
         f"  Tokens in / out        {m['input_tokens']} / {m['output_tokens']}",
     ]
     return "\n".join(lines)
+
+
+def first_hit_rank(retrieved: list[str], expected: list[str]) -> int | None:
+    """Position (1-based) of the first expected article in the results, or None."""
+    for rank, article_id in enumerate(retrieved, start=1):
+        if article_id in expected:
+            return rank
+    return None
+
+
+def compute_retrieval_metrics(records: list[dict], ks: tuple[int, ...] = (1, 3, 5)) -> dict:
+    answerable = [r for r in records if r["expected_action"] == "answer"]
+    ranks = [first_hit_rank(r["retrieved_ids"], r["expected_articles"]) for r in answerable]
+
+    groups = {
+        "answerable": answerable,
+        "kb_not_covered": [r for r in records if r["expected_handoff_reason"] == "kb_not_covered"],
+        "out_of_scope": [r for r in records if r["expected_handoff_reason"] == "out_of_scope"],
+    }
+    top_scores = {
+        name: [r["retrieved_scores"][0] for r in group if r["retrieved_scores"]]
+        for name, group in groups.items()
+    }
+
+    return {
+        "answerable": len(answerable),
+        "hit_at": {k: rate(sum(1 for rank in ranks if rank and rank <= k), len(answerable)) for k in ks},
+        "mrr": rate(sum(1 / rank for rank in ranks if rank), len(answerable)),
+        "top_score": {
+            name: {
+                "count": len(scores),
+                "p10": percentile(scores, 10),
+                "p50": percentile(scores, 50),
+                "p90": percentile(scores, 90),
+            }
+            for name, scores in top_scores.items()
+        },
+    }
+
+
+def _score(value: float | None) -> str:
+    return "  n/a" if value is None else f"{value:.3f}"
+
+
+def format_retrieval_report(m: dict) -> str:
+    lines = [f"Answerable cases: {m['answerable']}", ""]
+    for k, value in m["hit_at"].items():
+        lines.append(f"  Hit@{k:<3}  {_pct(value)}")
+    mrr = "n/a" if m["mrr"] is None else f"{m['mrr']:.3f}"
+    lines.append(f"  MRR     {mrr}")
+    lines += ["", "Top-1 similarity by group      p10    p50    p90   (n)"]
+    for name, s in m["top_score"].items():
+        lines.append(f"  {name:<26} {_score(s['p10'])}  {_score(s['p50'])}  {_score(s['p90'])}   ({s['count']})")
+    return "\n".join(lines)
