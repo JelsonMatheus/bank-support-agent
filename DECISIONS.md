@@ -257,15 +257,26 @@ ranked second or third.
 **What this means for hand-off:** the medians are well apart, but the tails
 overlap: the answerable p10 (0.682) is level with the `kb_not_covered` p90
 (0.685), so any threshold in that region errs one way or the other. A
-similarity threshold of <value> is used only as a first barrier: it blocks no
-answerable case in the development set and catches <n>/30 `kb_not_covered` and
-<n>/3 `out_of_scope` cases. Everything above it relies on the LLM judging
-whether the retrieved articles actually answer the question.
+similarity threshold of **0.58** is used only as a first barrier: it is the
+highest value that blocks no answerable case in the development set (the
+lowest answerable score is 0.590), and it catches 5/30 `kb_not_covered` and
+3/3 `out_of_scope` cases. Raising it to 0.60 blocks one answerable case and
+catches nothing more.
 
-**Caveats:** the threshold is specific to this embedding model and was chosen
-on the development set; the test set will show whether it holds. Only 3
-`out_of_scope` cases exist, too few to characterise that group.
+The remaining 25 `kb_not_covered` cases reach the LLM, which must judge whether
+the retrieved articles actually answer the question. If the end-to-end
+evaluation shows unsafe answers on these cases, raising the threshold is a
+measured trade-off:
 
+| Threshold | Answerable blocked | `kb_not_covered` caught |
+| --- | --- | --- |
+| 0.58 | 0/84 | 5/30 |
+| 0.62 | 1/84 | 7/30 |
+| 0.64 | 4/84 | 12/30 |
+| 0.68 | 8/84 | 23/30 |
+
+The margin is thin: the lowest answerable score (0.590) is just above the
+threshold. Falling below it hands a customer off, which is safe.
 ---
 
 ## 15. Language
