@@ -1,4 +1,7 @@
+import pytest
+
 from evals.metrics import compute_metrics, percentile
+from evals.metrics import compute_retrieval_metrics, first_hit_rank
 from agent.baseline import BaselineAgent
 from evals.run_eval import evaluate
 
@@ -87,6 +90,7 @@ def test_percentile_uses_nearest_rank():
     assert percentile([10, 20, 30, 40], 50) == 20
     assert percentile([10, 20, 30, 40], 95) == 40
 
+
 def test_evaluate_keeps_case_order_and_labels():
     records = evaluate(CASES, BaselineAgent(), workers=2)
 
@@ -100,3 +104,41 @@ def test_evaluate_records_agent_errors_instead_of_stopping():
     assert all(r["outcome"] == "failed" for r in records)
     assert "provider timeout" in records[0]["error"]
 
+
+def retrieval_record(expected_action, retrieved_ids, scores, expected_articles=(), reason=None) -> dict:
+    return {
+        "expected_action": expected_action,
+        "expected_articles": list(expected_articles),
+        "expected_handoff_reason": reason,
+        "retrieved_ids": retrieved_ids,
+        "retrieved_scores": scores,
+    }
+
+
+def test_first_hit_rank_accepts_any_expected_article():
+    assert first_hit_rank(["kb-009", "kb-005", "kb-003"], ["kb-003", "kb-005"]) == 2
+    assert first_hit_rank(["kb-009"], ["kb-003"]) is None
+
+
+def test_hit_at_k_and_mrr():
+    metrics = compute_retrieval_metrics([
+        retrieval_record("answer", ["kb-002", "kb-001", "kb-003"], [0.9, 0.8, 0.7], ["kb-002"]),
+        retrieval_record("answer", ["kb-001", "kb-003", "kb-002"], [0.9, 0.8, 0.7], ["kb-002"]),
+        retrieval_record("answer", ["kb-001", "kb-003", "kb-004"], [0.9, 0.8, 0.7], ["kb-002"]),
+    ], ks=(1, 3))
+
+    assert metrics["hit_at"] == {1: 1 / 3, 3: 2 / 3}
+    assert metrics["mrr"] == pytest.approx((1 + 1 / 3 + 0) / 3)
+
+
+def test_top_scores_are_grouped_by_expected_behaviour():
+    metrics = compute_retrieval_metrics([
+        retrieval_record("answer", ["kb-002"], [0.85], ["kb-002"]),
+        retrieval_record("handoff", ["kb-010"], [0.55], reason="kb_not_covered"),
+        retrieval_record("handoff", ["kb-017"], [0.40], reason="out_of_scope"),
+        retrieval_record("handoff", ["kb-006"], [0.80], reason="refund_or_dispute"),
+    ])
+
+    assert metrics["top_score"]["answerable"]["p50"] == 0.85
+    assert metrics["top_score"]["kb_not_covered"]["p50"] == 0.55
+    assert metrics["top_score"]["out_of_scope"]["p50"] == 0.40
