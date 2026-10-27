@@ -17,3 +17,4 @@ def ping() -> str:
 @shared_task
 def process_ticket_task(ticket_id: str) -> None:
     process_ticket(ticket_id)
+    
