@@ -129,7 +129,29 @@ until measured on the development set:
 
 ---
 
-## 9. Language
+## 10. Tickets API
+
+**Decision:** `POST /api/tickets/` stores the ticket and returns
+`202 Accepted` with a `Location` header; the agent processes it
+asynchronously. `GET /api/tickets/<id>/` returns the ticket's status and the
+latest agent result. Ticket ids are UUIDs, and messages are limited to 5,000
+characters.
+
+**Why:** `202` is the honest answer for queued work: the ticket was accepted,
+not yet handled. UUIDs can't be guessed, so one ticket's id reveals nothing
+about others. The length limit caps the cost of a single message and the room
+for injected instructions.
+
+**What the API exposes:** the decision (outcome, category, hand-off reason,
+answer and cited articles). Operational data such as tokens, latency, prompt
+version and trace ids stays in the admin, for the team.
+
+**Out of scope:** authentication and rate limiting. In production the API would
+sit behind the bank's API gateway, which would handle both.
+
+---
+
+## 11. Language
 
 **Decision:** Messages, knowledge base and answers are in English only.
 

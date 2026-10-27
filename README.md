@@ -33,3 +33,20 @@ uv run pytest
 ```
 
 Postgres and Redis must be running.
+
+## API
+
+Create a ticket:
+
+```bash
+curl -i -X POST http://localhost:8000/api/tickets/ \
+  -H "Content-Type: application/json" \
+  -d '{"customer_id": "c-0001", "text": "My card still has not arrived"}'
+```
+
+The response is `202 Accepted`, with the ticket in the body and its address in
+the `Location` header. Check the result with:
+
+```bash
+curl http://localhost:8000/api/tickets/<id>/
+```
