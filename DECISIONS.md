@@ -174,7 +174,33 @@ handing off fewer of the cases that require a human.
 
 ---
 
-## 12. Language
+## 12. Evaluation metrics
+
+**Decision:** Every evaluation reports three groups of metrics.
+
+- **Safety:** hand-off recall (of the cases that require a person, how many
+  were handed off) and the number of unsafe answers (cases that required a
+  person but were answered). Unsafe answers must be zero.
+- **Usefulness:** automation rate (of the cases the agent could answer, how
+  many it answered) and citation hit rate (of those answers, how many cited an
+  expected article).
+- **Classification:** action, category and hand-off reason accuracy, plus
+  hand-offs broken down by expected reason.
+
+Failures, latency (p50 and p95) and tokens are reported alongside.
+
+**Why:** Safety and usefulness pull in opposite directions: an agent that never
+answers is perfectly safe and useless. Reporting both, with the absolute counts
+next to every rate, makes trade-offs visible. The breakdown by reason exposes
+a weak rule that a good overall recall would hide.
+
+**Baseline:** the baseline agent has 100% hand-off recall, 0 unsafe answers
+and 0% automation on the development set. Any change to the agent must raise
+automation while keeping unsafe answers at zero.
+
+---
+
+## 13. Language
 
 **Decision:** Messages, knowledge base and answers are in English only.
 
